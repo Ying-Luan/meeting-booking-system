@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package proto.meeting;
+
+// 核心实体定义：会议 (Appointment/Meeting)
+message Meeting {
+  int32 meeting_id = 1; // 预约ID (唯一标识)
+  string organizer_name = 2; // 组织者姓名
+  string room_name = 3; // 会议室名称
+  string subject = 4; // 会议主题
+  int64 start_time = 5; // 开始时间 (Unix 时间戳)
+  int64 end_time = 6; // 结束时间 (Unix 时间戳)
+  int32 participant_count = 7; // 参与人数
+}
+
+// 预约会议室请求
+message BookMeetingRequest {
+  Meeting meeting = 1;
+}
+
+// 预约会议室响应
+message BookMeetingResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// 根据预约ID查询请求
+message QueryByIDRequest {
+  int32 meeting_id = 1;
+}
+
+// 根据预约ID查询响应
+message QueryByIDResponse {
+  bool found = 1;
+  Meeting meeting = 2;
+}
+
+// 根据组织者姓名查询请求
+message QueryByOrganizerRequest {
+  string organizer_name = 1;
+}
+
+// 根据组织者姓名查询响应
+message QueryByOrganizerResponse {
+  bool found = 1;
+  repeated Meeting meetings = 2; // repeated 对应 List<Meeting>
+}
+
+// 取消指定会议预约请求
+message CancelMeetingRequest {
+  int32 meeting_id = 1;
+}
+
+// 取消指定会议预约响应
+message CancelMeetingResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// 定义 RPC 服务
+service MeetingRoomService {
+  // 预约会议室
+  rpc BookMeeting(BookMeetingRequest) returns (BookMeetingResponse);
+
+  // 根据预约ID查询
+  rpc QueryByID(QueryByIDRequest) returns (QueryByIDResponse);
+
+  // 根据组织者姓名查询
+  rpc QueryByOrganizer(QueryByOrganizerRequest) returns (QueryByOrganizerResponse);
+
+  // 取消指定会议预约
+  rpc CancelMeeting(CancelMeetingRequest) returns (CancelMeetingResponse);
+}

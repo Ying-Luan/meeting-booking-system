@@ -1,0 +1,4 @@
+__pycache__/
+.venv/
+src/meeting_pb2_grpc.py
+src/meeting_pb2.py
